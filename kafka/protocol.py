@@ -172,6 +172,7 @@ class KafkaProtocol(object):
 
         elif codec == CODEC_SNAPPY:
             snp = snappy_decode(value)
+            print snp
             for (offset, msg) in KafkaProtocol._decode_message_set_iter(snp):
                 yield (offset, msg)
 
