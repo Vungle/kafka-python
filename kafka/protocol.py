@@ -122,11 +122,8 @@ class KafkaProtocol(object):
         read_message = False
         while cur < len(data):
             try:
-                print "trying to decode message..."
                 ((offset, ), cur) = relative_unpack('>q', data, cur)
-                print "in first method\n\toffset:%s\n\tcur:%s"%(offset, cur) 
                 (msg, cur) = read_int_string(data, cur)
-                print "didn't die here?\n\tmsg:%s"%msg
                 for (offset, message) in KafkaProtocol._decode_message(msg, offset):
                     read_message = True
                     yield OffsetAndMessage(offset, message)
@@ -156,8 +153,6 @@ class KafkaProtocol(object):
         The offset is actually read from decode_message_set_iter (it is part
         of the MessageSet payload).
         """
-        print "entered _decode_message"
-        print "offset:%s"%offset
         ((crc, magic, att), cur) = relative_unpack('>IBB', data, 0)
         if crc != crc32(data[4:]):
             raise ChecksumError("Message checksum failed")
@@ -176,11 +171,7 @@ class KafkaProtocol(object):
                 yield (offset, msg)
 
         elif codec == CODEC_SNAPPY:
-            print "codec is snappy"
-            print value
             snp = snappy_decode(value)
-            print "decoded"
-            print snp
             for (offset, msg) in KafkaProtocol._decode_message_set_iter(snp):
                 yield (offset, msg)
 
