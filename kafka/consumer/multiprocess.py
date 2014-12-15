@@ -40,7 +40,7 @@ def _mp_consume(client, group, topic, chunk, queue, start, exit, pause, size):
                               auto_commit_every_t=None)
   
     # Get the offsets
-    consumer.get_last_known_offsets()
+    consumer.fetch_last_known_offsets()
 
     # Ensure that the consumer provides the partition information
     consumer.provide_partition_info()
